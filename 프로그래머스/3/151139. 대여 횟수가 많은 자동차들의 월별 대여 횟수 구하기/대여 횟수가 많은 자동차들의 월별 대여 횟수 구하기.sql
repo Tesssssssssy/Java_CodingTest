@@ -3,6 +3,7 @@
 -- 2. 위 결과에 대해 월별 자동차 ID 별 총 대여 횟수
 -- 3. 서브 쿼리에서 CAR_ID만 뽑은 거니까 밖에서 한번 더 날짜 filtering해야 함.
 
+
 SELECT MONTH(START_DATE) AS MONTH, CAR_ID, COUNT(CAR_ID) AS RECORDS
 FROM CAR_RENTAL_COMPANY_RENTAL_HISTORY
 WHERE START_DATE >= '2022-08-01' AND START_DATE < '2022-11-01'
