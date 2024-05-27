@@ -1,7 +1,7 @@
 import java.util.*;
 
 class Solution {
-    public static int solution(int n, int[][] edge) {
+    public int solution(int n, int[][] edge) {
         List<List<Integer>> graph = new ArrayList<>();
         for (int i = 0; i <= n; i++) {
             graph.add(new ArrayList<>());  // 각 노드 번호에 대응하는 인접 리스트 초기화
