@@ -1,40 +1,46 @@
-import java.util.Collections;
-import java.util.PriorityQueue;
+import java.util.*;
 
 class Solution {
-    public int solution(int[] priorities, int location) {
-        PriorityQueue<Integer> pq = new PriorityQueue<>(Collections.reverseOrder());
+    public static int solution(int[] priorities, int location) {
+        // 프로세스의 우선순위와 원래 위치를 저장하는 큐 생성.
+        Queue<int[]> queue = new LinkedList<>();
 
-        for(Integer i : priorities) {
-            pq.add(i);
+        // 각 프로세스를 큐에 삽입.
+        for (int i = 0; i < priorities.length; i++) {
+            queue.add(new int[]{priorities[i], i});
         }
 
-        System.out.println(pq);     // [3, 2, 2, 1]
+        int executionOrder = 0;
+        // 실행 순서를 기록하는 변수
 
-        int count = 0;
+        while (!queue.isEmpty()) {
+            // 큐의 첫 번째 프로세스를 꺼냄.
+            int[] current = queue.poll();
+            boolean hasHigherPriority = false;
 
-        while(!pq.isEmpty()) {
-            for (int i = 0; i < priorities.length; i++) {
-                // 배열을 돌면서 우선순위 큐의 가장 큰 값을 찾음
+            // 큐에 현재 프로세스보다 높은 우선순위의 프로세스가 있는지 확인.
+            for (int[] process : queue) {
+                if (process[0] > current[0]) {
+                    hasHigherPriority = true;
+                    break;
+                }
+            }
 
-                if (pq.peek() == priorities[i]) {
-                    // pq.peek()=3 != priorities[0] = 2 -> 아무 일도 안 일어남
-                    // pq.peek()=3 != priorities[2] = 3
+            if (hasHigherPriority) {
+                // 높은 우선순위의 프로세스가 있다면 현재 프로세스를 다시 큐에 삽입.
+                queue.add(current);
+            } else {
+                // 높은 우선순위의 프로세스가 없다면 현재 프로세스를 실행.
+                executionOrder++;
 
-                    count++;
-                    // count = 1
-
-                    // 가장 큰 수여서 큐에서 나가야 할 뿐만 아니라, 찾고 있던 원소였다면 반복문 탈출
-                    if (i == location) { // i = 2 == location = 2
-                        return count;   // return count = 1
-                    }
-
-                    // 가장 큰 수이지만 찾고 있던 원소가 아니라면 다시 배열 탐색
-                    // 다시 큐에 집어 넣는다.
-                    pq.poll();
+                // 실행한 프로세스가 우리가 찾고 있는 위치의 프로세스인 경우 실행 순서를 반환.
+                if (current[1] == location) {
+                    return executionOrder;
                 }
             }
         }
-        return count;
+
+        return executionOrder;
+        // 실행 순서를 찾지 못한 경우
     }
 }
