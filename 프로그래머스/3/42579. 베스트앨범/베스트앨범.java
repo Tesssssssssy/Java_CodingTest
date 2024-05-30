@@ -1,69 +1,54 @@
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 class Solution {
-    public int[] solution(String[] genres, int[] plays) {
-                ArrayList<Integer> answer = new ArrayList<>();
-        // 베스트 앨범에 들어갈 노래의 고유 번호를 저장할 리스트
+    public static int[] solution(String[] genres, int[] plays) {
+        Map<String, Integer> genreTotalPlays = new HashMap<>();
+        // 각 장르의 총 재생 횟수를 저장하는 HashMap
 
-        HashMap<String, Integer> num = new HashMap<>();
-        // 각 장르별로 노래의 총 재생 횟수를 저장할 해시맵
+        Map<String, PriorityQueue<int[]>> genreSongs = new HashMap<>();
+        // 각 장르별로 노래의 인덱스와 재생 횟수를 저장하는 PriorityQueue를 가진 HashMap
+        // PriorityQueue -> 재생 횟수가 많은 순으로 정렬
 
-        HashMap<String, HashMap<Integer, Integer>> music = new HashMap<>();
-        // 각 장르에 속하는 각 노래의 고유 번호와 재생 횟수를 저장할 해시맵의 해시맵
+        for (int i = 0; i < genres.length; i++) {
+            // 장르와 재생 횟수 배열을 순회하면서 genreTotalPlays에 각 장르별 총 재생 횟수를 누적
 
-        for(int i = 0; i < plays.length; i++) {
-            // genres 배열을 순회하며 각 노래에 대한 정보를 수집
+            String genre = genres[i];
+            int play = plays[i];
 
-            if(!num.containsKey(genres[i])) {
-                // 만약 num 해시맵에 해당 장르가 존재하지 않는다면,
-                // 새로운 HashMap을 생성하여 노래 고유 번호와 재생 횟수를 저장하고, music과 num에 해당 정보를 추가
+            genreTotalPlays.put(genre, genreTotalPlays.getOrDefault(genre, 0) + play);
 
-                HashMap<Integer, Integer> map = new HashMap<>();
-                map.put(i, plays[i]);
-                music.put(genres[i], map);
-                num.put(genres[i], plays[i]);
-            } else {
-                // 이미 해당 장르가 num에 존재한다면,
-                // 해당 장르의 HashMap에 새로운 노래 정보를 추가하고, 총 재생 횟수를 갱신
+            if (!genreSongs.containsKey(genre)) {
+                genreSongs.put(genre, new PriorityQueue<>((a, b) -> b[1] - a[1]));
+            }
+            genreSongs.get(genre).add(new int[]{i, play});
 
-                music.get(genres[i]).put(i, plays[i]);
-                num.put(genres[i], num.get(genres[i]) + plays[i]);
+            // genreSongs에는 각 장르별로 PriorityQueue를 생성하고, 각 노래의 인덱스와 재생 횟수 배열을 저장.
+            // PriorityQueue의 정렬 기준은 재생 횟수가 높은 노래가 우선순위를 갖는다.
+        }
+
+        List<String> sortedGenres = new ArrayList<>(genreTotalPlays.keySet());
+        sortedGenres.sort((g1, g2) -> genreTotalPlays.get(g2) - genreTotalPlays.get(g1));
+        // genreTotalPlays의 키(장르)를 리스트로 추출한 후, 이를 각 장르의 총 재생 횟수를 기준으로 내림차순 정렬
+
+        List<Integer> answerList = new ArrayList<>();
+
+        for (String genre : sortedGenres) {
+            PriorityQueue<int[]> songs = genreSongs.get(genre);
+            answerList.add(songs.poll()[0]);
+
+            if (!songs.isEmpty()) {
+                answerList.add(songs.poll()[0]);
             }
         }
+        // 정렬된 장르 리스트를 순회하면서 각 장르별 PriorityQueue에서 최대 두 개의 노래 인덱스를 추출.
+        // 첫 번째는 가장 많이 재생된 노래, 두 번째는 그 다음으로 많이 재생된 노래의 인덱스.
 
-        List<String> keySet = new ArrayList(num.keySet());
-        // num 해시맵의 키셋(장르명)을 리스트로 변환 (정렬하기 위해)
-
-        Collections.sort(keySet, (s1, s2) -> num.get(s2) - (num.get(s1)));
-        /*
-            리스트를 재생 횟수에 따라 내림차순으로 정렬
-            s1과 s2는 keySet에서 가져온 두 개의 장르명.
-            num.get(s1)과 num.get(s2)는 각각 장르 s1과 s2의 총 재생 횟수를 num 해시맵에서 조회.
-            num.get(s2) - num.get(s1)는 s2의 재생 횟수에서 s1의 재생 횟수를 빼는 것.
-
-            결과가 양수라면 s2가 s1보다 더 많이 재생된 것이므로, s2를 s1보다 앞에 위치 (내림차순).
-            결과가 음수라면 s1이 s2보다 더 많이 재생되어, s1을 s2보다 앞에 위치.
-            결과가 0이면 두 장르의 재생 횟수가 같다는 의미 => 두 요소의 순서는 변경되지 않는다.
-        */
-
-        for(String key : keySet) {
-            // 정렬된 장르 리스트를 순회하며 각 장르별로 노래를 정렬
-
-            HashMap<Integer, Integer> map = music.get(key);
-            List<Integer> genre_key = new ArrayList(map.keySet());
-
-            Collections.sort(genre_key, (s1, s2) -> map.get(s2) - (map.get(s1)));
-            // 각 장르의 HashMap에서 키셋(노래 고유 번호)을 가져와 재생 횟수에 따라 내림차순으로 정렬
-
-            answer.add(genre_key.get(0));
-            if(genre_key.size() > 1)
-                answer.add(genre_key.get(1));
-            // 각 장르에서 재생 횟수가 가장 높은 노래 두 개를 answer 리스트에 추가
+        int[] answer = new int[answerList.size()];
+        for (int i = 0; i < answerList.size(); i++) {
+            answer[i] = answerList.get(i);
         }
+        // 추출된 노래 인덱스를 배열 answer에 저장하여 반환
 
-        return answer.stream().mapToInt(i -> i).toArray();
+        return answer;
     }
 }
