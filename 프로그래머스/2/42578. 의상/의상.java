@@ -1,30 +1,23 @@
 import java.util.HashMap;
-import java.util.Map;
 
 class Solution {
-    public int solution(String[][] clothes) {
-        Map<String, Integer> map = new HashMap<>();
-        int answer = 1; // 곱셈이기에 시작값 1로 설정 (항등원)
+    public static int solution(String[][] clothes) {
+        int answer = 1; // 경우의 수 곱해야 하므로 1로 설정
 
-        for(String[] cloth : clothes) {
-            // clothes 배열을 순회하면서 각 옷의 종류(cloth[1])를 확인하고,
-            // 해당 종류가 이미 map에 존재하는 경우, 그 값에 1을 더하고,
-            // 존재하지 않는 경우 기본값 0에 1을 더하여 map에 저장. 이로써 각 종류별 옷의 개수를 카운트
-            map.put(cloth[1], map.getOrDefault(cloth[1], 0) + 1);
+        HashMap<String, Integer> hashMap = new HashMap<>();
+
+        // 각 의상의 종류별로 의상 수 세고
+        for (String[] cloth : clothes) {
+            hashMap.put(cloth[1], hashMap.getOrDefault(cloth[1], 0) + 1);
         }
 
-        for(String key : map.keySet()) {
-            answer *= (map.get(key) + 1);   // 조합 -> 안입는 경우도 고려하기 위해 + 1
+        // 각 의상의 종류별로 의상을 선택할 수 있는 경우의 수를 계산
+        for (String key : hashMap.keySet()) {
+            // 각 의상 종류는 선택하지 않는 경우도 포함해서 +1
+            answer *= (hashMap.get(key) + 1);
         }
-        // map의 모든 키(옷의 종류)에 대해 반복하면서, 각 종류의 옷을 입는 경우의 수 계산.
-        // 각 종류별로 옷을 입는 경우의 수는 옷의 개수 + 1
-        // (여기서 +1은 그 종류의 옷을 전혀 입지 않는 경우를 포함).
-        // 이 값을 answer에 계속 곱하여 모든 종류의 옷에 대한 조합을 계산
 
-        answer -= 1; 
-        // 모두 '안입음'일 경우 -1 해주기
-        // 앞서 계산한 모든 조합에 "아무것도 입지 않는 경우"가 포함되었기 때문에, 이를 제외
-
-        return answer;
+        // 최소 한 개의 의상은 입어야 하므로 모든 의상을 선택하지 않는 경우를 빼준다
+        return answer - 1;
     }
 }
