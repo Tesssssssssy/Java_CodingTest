@@ -1,17 +1,21 @@
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 class Solution {
-    public int solution(int[] nums) {
-        Map<Integer, Integer> pokemonTypes = new HashMap<>();
-        int n = nums.length;
+    public static int solution(int[] nums) {
+        int answer = 0;
+        int max = nums.length / 2;
+
+        HashSet<Integer> hashSet = new HashSet<>();
 
         for (int num : nums) {
-            pokemonTypes.put(num, pokemonTypes.getOrDefault(num, 0) + 1);
+            hashSet.add(num);
         }
 
-        int numTypes = pokemonTypes.size();
-
-        return Math.min(numTypes, n / 2);
+        if (hashSet.size() > max)
+            answer = max;
+        else
+            answer = hashSet.size();
+        
+        return answer;
     }
 }
