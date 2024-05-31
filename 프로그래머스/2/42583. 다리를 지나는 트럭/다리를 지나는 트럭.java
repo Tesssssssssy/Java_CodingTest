@@ -1,9 +1,8 @@
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.*;
 
 class Solution {
-    public int solution(int bridge_length, int weight, int[] truck_weights) {
-                Queue<Integer> bridge = new LinkedList<>(); // 다리를 현재 건너고 있는 트럭들의 무게를 저장
+    public static int solution(int bridge_length, int weight, int[] truck_weights) {
+        Queue<Integer> bridge = new LinkedList<>(); // 다리를 현재 건너고 있는 트럭들의 무게를 저장
         int currentTime = 0;    // 현재까지 경과한 시간
         int currentWeight = 0;  // 다리 위에 있는 트럭들의 총 무게
         int truckIndex = 0;     // 대기 트럭 배열에서 다리에 올릴 다음 트럭의 인덱스
