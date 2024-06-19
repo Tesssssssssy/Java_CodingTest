@@ -2,7 +2,19 @@ import java.io.*;
 import java.util.*;
 
 class Main {
-	public static void main(String[] args) throws Exception {
+	/**
+     * <DFS 사용한 재귀 호출 방식 사용하면 RUN TIME ERROR>
+     *
+     *  주차장 정보 입력: 각 칸의 상태(0, 1, 2)를 입력 받음.
+     *  BFS로 구역 탐색: 각 칸을 시작점으로 하여 BFS를 실행.
+     *                방문하지 않은 칸이면서 자동차(1)가 없는 칸에서 시작.
+     *  점수 계산: 구역을 탐색하면서 점수를 계산.
+     *          빈 칸(0)은 +1점, 장애인 전용 칸(2)은 -2점.
+     *  최대 점수 갱신: 각 구역의 점수를 계산한 후 최대 점수를 갱신.
+     *  결과 출력: 모든 구역을 탐색한 후, 가장 높은 점수가 음수인 경우 0을 출력.
+     *                             그렇지 않은 경우 최대 점수를 출력.
+     */
+    public static void main(String[] args) throws Exception {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         String input = br.readLine();  // 첫 번째 줄 입력을 읽습니다.
         StringTokenizer st = new StringTokenizer(input);
@@ -14,9 +26,12 @@ class Main {
 
         // 주차장 정보 입력 받기
         for (int i = 0; i < n; i++) {
-            st = new StringTokenizer(br.readLine());  // 각 행의 주차 상태를 입력 받습니다.
+            st = new StringTokenizer(br.readLine());
+            // 각 행의 주차 상태를 입력 받습니다.
+
             for (int j = 0; j < m; j++) {
-                parkingLot[i][j] = Integer.parseInt(st.nextToken());  // 각 칸의 주차 상태를 저장합니다.
+                parkingLot[i][j] = Integer.parseInt(st.nextToken());
+                // 각 칸의 주차 상태를 저장합니다.
             }
         }
 
@@ -27,7 +42,9 @@ class Main {
 
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < m; j++) {
-                if (!visited[i][j] && parkingLot[i][j] != 1) {  // 방문하지 않은 빈 칸(0) 또는 장애인 구역(2)에서 시작
+                if (!visited[i][j] && parkingLot[i][j] != 1) {
+                    // 방문하지 않은 빈 칸(0) 또는 장애인 구역(2)에서 시작
+
                     int score = 0;  // 현재 구역의 점수를 계산할 변수
                     Queue<int[]> queue = new LinkedList<>();
                     queue.offer(new int[]{i, j});
@@ -46,7 +63,8 @@ class Main {
                         for (int k = 0; k < 4; k++) {
                             int nx = x + dx[k];
                             int ny = y + dy[k];
-                            if (nx >= 0 && nx < n && ny >= 0 && ny < m && !visited[nx][ny] && parkingLot[nx][ny] != 1) {
+                            if (nx >= 0 && nx < n && ny >= 0 && ny < m
+                                    && !visited[nx][ny] && parkingLot[nx][ny] != 1) {
                                 visited[nx][ny] = true;
                                 queue.offer(new int[]{nx, ny});
                             }
