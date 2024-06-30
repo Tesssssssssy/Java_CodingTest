@@ -23,10 +23,14 @@ public class Main {
 
         // 각 테스트 케이스에 대해 수행
         for (int t = 0; t < T; t++) {
-            int K = Integer.parseInt(br.readLine()); // K 값을 입력 받음
+            int K = Integer.parseInt(br.readLine()); 
             boolean found = false;
 
-            // 두 삼각수의 합을 저장할 HashSet
+            /*
+                두 삼각수의 합을 저장할 HashSet
+                - 모든 가능한 삼각수 쌍의 합을 twoSumSet에 저장
+                - K 값을 두 삼각수의 합과 하나의 삼각수의 차로 표현할 수 있는지 빠르게 확인하기 위함
+             */
             Set<Integer> twoSumSet = new HashSet<>();
             for (Integer a : triangularNumbers) {
                 for (Integer b : triangularNumbers) {
