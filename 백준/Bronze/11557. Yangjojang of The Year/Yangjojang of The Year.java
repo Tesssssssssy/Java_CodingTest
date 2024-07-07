@@ -16,25 +16,18 @@ public class Main {
         for (int t = 0; t < T; t++) {
             int N = Integer.parseInt(br.readLine());  // 각 테스트 케이스에서의 학교 수
 
-            Map<String, Integer> schoolAlcohol = new TreeMap<>();
+            Map<Integer, String> schoolAlcohol = new TreeMap<>();
 
             for (int i = 0; i < N; i++) {
                 StringTokenizer st = new StringTokenizer(br.readLine());
                 String schoolName = st.nextToken();
                 int alcoholAmount = Integer.parseInt(st.nextToken());
-                schoolAlcohol.put(schoolName, alcoholAmount);
+                schoolAlcohol.put(alcoholAmount, schoolName);
             }
 
             // TreeMap에서 value로 최대값 찾고
-            int maxAlcoholAmount = Collections.max(schoolAlcohol.values());
-
-            // 찾은 maxDrunkenSchool 값을 갖는 키를 찾음
-            for (Map.Entry<String, Integer> entry : schoolAlcohol.entrySet()) {
-                if (entry.getValue() == maxAlcoholAmount) {
-                    System.out.println(entry.getKey());
-                    break;
-                }
-            }
+            int maxAlcoholAmount = Collections.max(schoolAlcohol.keySet());
+            System.out.println(schoolAlcohol.get(maxAlcoholAmount));
         }
     }
 }
