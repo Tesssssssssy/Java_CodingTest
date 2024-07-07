@@ -32,20 +32,23 @@ public class Main {
 
         /*
             간선 정보 입력
-            1 ---- 2
-            |  \   |
-            |   \  |
+            1 ---- 2        1부터 시작
+            |  \   |        DFS: 1 2 4 3
+            |   \  |        BFS: 1 2 3 4
             3 ---- 4
         */
         for (int i = 0; i < M; i++) {
             st = new StringTokenizer(br.readLine());
-            int start = Integer.parseInt(st.nextToken());
-            int end = Integer.parseInt(st.nextToken());
-            graph.get(start).add(end);
-            graph.get(end).add(start); // 양방향 연결
+            int a = Integer.parseInt(st.nextToken());
+            int b = Integer.parseInt(st.nextToken());
+            graph.get(a).add(b);
+            graph.get(b).add(a); // 양방향 연결
         }
 
-        // 각 정점의 인접 리스트를 정렬하여 번호가 작은 것을 먼저 방문하도록 함
+        /*
+            각 정점의 인접 리스트를 정렬하여 번호가 작은 것을 먼저 방문하도록 한다.
+            (문제 조건: 방문할 수 있는 정점이 여러 개인 경우에는 정점 번호가 작은 것을 먼저 방문)
+        */
         for (int i = 1; i <= N; i++) {
             Collections.sort(graph.get(i));
         }
@@ -57,13 +60,13 @@ public class Main {
         // DFS와 BFS 방문 여부를 저장할 배열
         boolean[] visited = new boolean[N + 1];
 
-        // DFS 탐색 수행
+        // DFS 탐색
         dfs(V, graph, visited, dfsResult);
 
-        // BFS 탐색을 또 해야하므로 방문 여부 배열 초기화
+        // 이후에 BFS 탐색을 또 해야하므로 이미 사용한 방문 여부 배열 초기화
         Arrays.fill(visited, false);
 
-        // BFS 탐색 수행
+        // BFS 탐색
         bfs(V, graph, visited, bfsResult);
 
         for (int node : dfsResult) {
@@ -78,31 +81,44 @@ public class Main {
         System.out.println();
     }
 
-    // DFS 탐색 메서드
+    // DFS
     public static void dfs(int v, List<List<Integer>> graph, boolean[] visited, List<Integer> result) {
+        // 현재 정점 v를 방문 처리.
         visited[v] = true;
+        // 방문한 정점을 결과 리스트에 추가.
         result.add(v);
 
+        // 현재 정점 v에 인접한 모든 정점을 순회.
         for (int neighbor : graph.get(v)) {
+            // 인접한 정점 중 아직 방문하지 않은 정점에 대해
             if (!visited[neighbor]) {
+                // 재귀적으로 DFS를 호출하여 해당 정점 방문.
                 dfs(neighbor, graph, visited, result);
             }
         }
     }
 
-    // BFS 탐색 메서드
+    // BFS
     public static void bfs(int v, List<List<Integer>> graph, boolean[] visited, List<Integer> result) {
+        // 탐색을 시작할 정점을 큐에 추가.
         Queue<Integer> queue = new LinkedList<>();
         queue.add(v);
+        // 시작 정점 방문 처리.
         visited[v] = true;
-
+        
         while (!queue.isEmpty()) {
+            // 큐에서 정점 하나 꺼내고.
             int node = queue.poll();
+            // 꺼낸 정점을 결과 리스트에 추가.
             result.add(node);
 
+            // 꺼낸 정점의 인접한 모든 정점을 순회.
             for (int neighbor : graph.get(node)) {
+                // 인접 정점 중 아직 방문하지 않은 정점이 있으면
                 if (!visited[neighbor]) {
+                    // 해당 정점을 방문 처리하고
                     visited[neighbor] = true;
+                    // 큐에 추가.
                     queue.add(neighbor);
                 }
             }
