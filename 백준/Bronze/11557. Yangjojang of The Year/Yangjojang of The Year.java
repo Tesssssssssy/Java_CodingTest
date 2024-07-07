@@ -16,7 +16,12 @@ public class Main {
         for (int t = 0; t < T; t++) {
             int N = Integer.parseInt(br.readLine());  // 각 테스트 케이스에서의 학교 수
 
-            Map<Integer, String> schoolAlcohol = new TreeMap<>();
+            /*
+                문제에서 소비한 술의 양이 같은 학교가 없다고 했으므로 술의 양을 key로 한다.
+                TreeMap 자료구조를 사용할 것이고 자동으로 키 값을 기준으로 정렬이 되기 때문에
+                해당하는 키 값으로 학교 이름(value)을 찾는다.
+            */
+            TreeMap<Integer, String> schoolAlcohol = new TreeMap<>();
 
             for (int i = 0; i < N; i++) {
                 StringTokenizer st = new StringTokenizer(br.readLine());
@@ -25,9 +30,7 @@ public class Main {
                 schoolAlcohol.put(alcoholAmount, schoolName);
             }
 
-            // TreeMap에서 value로 최대값 찾고
-            int maxAlcoholAmount = Collections.max(schoolAlcohol.keySet());
-            System.out.println(schoolAlcohol.get(maxAlcoholAmount));
+            System.out.println(schoolAlcohol.get(schoolAlcohol.lastKey()));
         }
     }
 }
