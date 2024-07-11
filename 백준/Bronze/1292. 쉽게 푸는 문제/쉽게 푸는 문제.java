@@ -14,9 +14,9 @@ public class Main {
         int[] sequence = new int[1000];
         int index = 0;
 
-        // 수열 생성: 각 숫자 n을 n번 반복해서 배열에 저장
+        // 수열 생성: 각 숫자 n을 n번 반복해서 배열에 저장 (1 2 2 3 3 3 4 4 4 4 5 ...)
         for (int i = 1; index < sequence.length; i++) {
-            for (int j = 0; j < i && index < sequence.length; j++) {
+            for (int j = 1; j <= i && index < sequence.length; j++) {
                 // 각 숫자 i를 i번 반복
 
                 sequence[index++] = i;
