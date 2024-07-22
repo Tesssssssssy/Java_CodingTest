@@ -14,18 +14,17 @@ public class Main {
      */
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
         String[] firstLine = br.readLine().split(" ");
         int N = Integer.parseInt(firstLine[0]); // 주전자 개수
-        int K = Integer.parseInt(firstLine[1]); // 사람 수
+        int K = Integer.parseInt(firstLine[1]); // 친구 수
 
-        long[] volumes = new long[N];
+        long[] makgeolliList = new long[N];
         long maxVolume = 0;
 
         for (int i = 0; i < N; i++) {
-            volumes[i] = Long.parseLong(br.readLine());
-            maxVolume = Math.max(maxVolume, volumes[i]);
+            makgeolliList[i] = Long.parseLong(br.readLine());
+            maxVolume = Math.max(maxVolume, makgeolliList[i]);
         }
 
         long left = 1;
@@ -35,9 +34,11 @@ public class Main {
         while (left <= right) {
             long mid = (left + right) / 2;
             int count = 0;
-            for (long v : volumes) {
-                count += v / mid;
+
+            for (long makgeolli : makgeolliList) {
+                count += makgeolli / mid;
             }
+
             if (count >= K) {
                 result = mid; // 가능하면 결과 갱신
                 left = mid + 1; // 더 큰 값을 찾기 위해 left 갱신
@@ -46,9 +47,7 @@ public class Main {
             }
         }
 
-        bw.write(String.valueOf(result));
-        bw.flush();
-        bw.close();
+        System.out.println(result);
         br.close();
     }
 }
