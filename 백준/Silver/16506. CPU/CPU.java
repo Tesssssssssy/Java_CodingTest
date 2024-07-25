@@ -26,7 +26,7 @@ public class Main {
      *  [입력]
      *  명령어의 개수 N
      *  opcode rD rA rB" 또는 "opcode rD rA #C"의 형태로 주어짐.
-     *  (문자열 opcode는 항상 대문자)
+     *  (문자열 opcode 는 항상 대문자)
      *  (정수 rD, rA, rB (0 ≤ rD, rA, rB ≤ 7)는 레지스터 번호를 의미)
      *  (사용하는 레지스터 번호는 1부터 7까지이며, 사용하지 않을 경우에만 0이 주어짐)
      *
@@ -47,29 +47,35 @@ public class Main {
         hm.put("ASFTR", "1001");
         hm.put("RL", "1010");
         hm.put("RR", "1011");
+        // 어셈블리어 명령어(opcode)에 대응하는 기계어 코드를 저장하기 위해 HashMap 사용
 
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         int n = Integer.parseInt(br.readLine());
 
         StringBuilder sb = new StringBuilder();
-        while (n-- > 0) {
+        for (int i = 0; i < n; i++) {
+            // 입력된 명령어의 개수만큼 루프를 반복하여 각 명령어를 처리
+
             StringTokenizer st = new StringTokenizer(br.readLine());
-            String opcode = st.nextToken();
-            int rD = Integer.parseInt(st.nextToken());
-            int rA = Integer.parseInt(st.nextToken());
-            int rB = Integer.parseInt(st.nextToken());
+            String opcode = st.nextToken(); // opcode
+            int rD = Integer.parseInt(st.nextToken()); // 레지스터 rD
+            int rA = Integer.parseInt(st.nextToken()); // 레지스터 rA
+            int rB = Integer.parseInt(st.nextToken()); // 레지스터 rB
 
             if (opcode.charAt(opcode.length() - 1) == 'C') {
                 sb.append(hm.get(opcode.substring(0, opcode.length() - 1))).append("1");
             } else {
                 sb.append(hm.get(opcode)).append("0");
             }
+            // opcode의 마지막 문자가 'C'인 경우(예: "MOVC"), 상수 사용 의미, 기계어 코드에서 이를 1로 표시.
+            // 그렇지 않은 경우 레지스터를 사용함을 나타내며 0으로 표시
 
-            sb.append("0");
+            sb.append("0"); // 여분의 비트는 항상 0으로 설정
 
             String binary = Integer.toBinaryString(rD);
-            String s = append(0, binary, 2);
             sb.append(append(0, binary, 2));
+            // 정수 값을 이진 문자열로 변환하고,
+            // 필요한 길이만큼 앞에 0을 붙여 주는 append 메서드를 호출하여 정확한 비트 수를 맞춘다.
 
             if (opcode == "NOT" || opcode == "MOV" || opcode == "MOVC") {
                 sb.append("000");
@@ -91,6 +97,12 @@ public class Main {
     }
 
     private static String append(int depth, String str, int limit) {
+        /*
+            이 메소드에서 주어진 문자열 str의 길이가 limit에 도달할 때까지 재귀적으로 문자열 앞에 0을 추가.
+            depth 는 현재 재귀의 깊이를 나타내며,
+            최대 길이 limit에 도달하거나 이미 limit 이상인 경우 재귀를 종료하고 문자열을 반환
+        */
+
         if (depth >= limit || limit < str.length()) {
             return str;
         }
