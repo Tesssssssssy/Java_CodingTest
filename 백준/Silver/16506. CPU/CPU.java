@@ -33,9 +33,8 @@ public class Main {
      *  [출력]
      *  N개의 각 줄에 어셈블리어 코드를 기계어 코드로 번역하여 출력
      */
-    static HashMap<String, String> hm = new HashMap<>();
-
     public static void main(String[] args) throws IOException {
+        HashMap<String, String> hm = new HashMap<>();
         hm.put("ADD", "0000");
         hm.put("SUB", "0001");
         hm.put("MOV", "0010");
@@ -48,8 +47,10 @@ public class Main {
         hm.put("ASFTR", "1001");
         hm.put("RL", "1010");
         hm.put("RR", "1011");
+
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         int n = Integer.parseInt(br.readLine());
+
         StringBuilder sb = new StringBuilder();
         while (n-- > 0) {
             StringTokenizer st = new StringTokenizer(br.readLine());
@@ -57,28 +58,33 @@ public class Main {
             int rD = Integer.parseInt(st.nextToken());
             int rA = Integer.parseInt(st.nextToken());
             int rB = Integer.parseInt(st.nextToken());
+
             if (opcode.charAt(opcode.length() - 1) == 'C') {
                 sb.append(hm.get(opcode.substring(0, opcode.length() - 1))).append("1");
             } else {
                 sb.append(hm.get(opcode)).append("0");
             }
+
             sb.append("0");
 
             String binary = Integer.toBinaryString(rD);
             String s = append(0, binary, 2);
             sb.append(append(0, binary, 2));
+
             if (opcode == "NOT" || opcode == "MOV" || opcode == "MOVC") {
                 sb.append("000");
             } else {
                 String binary1 = Integer.toBinaryString(rA);
                 sb.append(append(0, binary1, 2));
             }
+
             String binary2 = Integer.toBinaryString(rB);
             if (opcode.charAt(opcode.length() - 1) == 'C') {
                 sb.append(append(0, binary2, 3));
             } else {
                 sb.append(append(0, binary2, 2)).append("0");
             }
+
             sb.append("\n");
         }
         System.out.println(sb);
