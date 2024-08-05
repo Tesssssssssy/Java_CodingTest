@@ -18,7 +18,7 @@ public class Main {
      */
     static int N, M;
     static boolean[] visited; // 방문 여부를 체크할 배열
-    static int[] sequence; // 현재 수열을 저장할 배열
+    static int[] sequence; // 현재까지 선택된 수열을 저장할 배열
 
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -35,10 +35,10 @@ public class Main {
 
     /*
         재귀적으로 수열을 생성.
-        깊이가 M에 도달하면 수열을 출력하고 종료.
-        
-        1부터 N 까지의 숫자를 순회하면서 방문하지 않은 숫자를 선택하고, 
-        이를 현재 수열에 추가한 후 다음 깊이로 재귀 호출. 
+        깊이가 M에 도달하면 수열을 출력하고 종료. (DFS)
+
+        1부터 N 까지의 숫자를 순회하면서 방문하지 않은 숫자를 선택하고,
+        이를 현재 수열에 추가한 후 다음 깊이로 재귀 호출.
         호출이 끝나면 해당 숫자를 다시 방문 가능 상태로 되돌림.
      */
     public static void backtrack(int depth) {
@@ -50,10 +50,10 @@ public class Main {
             return;
         }
 
-        for (int i = 1; i <= N; i++) {
+        for (int i = 0; i < N; i++) {
             if (!visited[i]) {
                 visited[i] = true;
-                sequence[depth] = i;
+                sequence[depth] = i + 1;
                 backtrack(depth + 1);
                 visited[i] = false;
             }
