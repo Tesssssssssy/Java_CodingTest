@@ -24,30 +24,26 @@ public class Main {
      */
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
+        int N = Integer.parseInt(br.readLine());
 
-        int N = Integer.parseInt(br.readLine());  // 배열의 크기
         int[] arr = new int[N];
-
         for (int i = 0; i < N; i++) {
             arr[i] = Integer.parseInt(br.readLine());
         }
 
-        Arrays.sort(arr);  // 배열 오름차순 정렬
+        Arrays.sort(arr);
 
-        int minToAdd = 5;  // 추가해야 할 원소의 최소 개수, 최대 4까지 추가해야 할 수 있음
-        int left = 0;  // 투 포인터의 왼쪽 포인터
-
-        // 오른쪽 포인터를 이동하면서 부분 배열을 검사
+        int left = 0;
+        int minToAdd = 5;
+        // 5개의 인접한 수의 차이가 각각 1이면 연속적인 거니까
+        // 추가해야하는 최대 숫자의 개수는 5개
         for (int right = 0; right < N; right++) {
-            // 현재 구간에서 첫 번째와 마지막 원소의 차이가 4 이내인 경우만 유효
             while (arr[right] - arr[left] > 4) {
                 left++;
             }
-            // 현재 구간의 길이가 5개에 미치지 못하면 추가해야 할 원소 계산
             int currentLength = right - left + 1;
             minToAdd = Math.min(minToAdd, 5 - currentLength);
         }
-
         System.out.println(minToAdd);
     }
 }
