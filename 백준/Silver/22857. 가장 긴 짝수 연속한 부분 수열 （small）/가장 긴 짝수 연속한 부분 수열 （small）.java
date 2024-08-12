@@ -20,6 +20,9 @@ public class Main {
      *
      *  [출력]
      *  수열 S에서 최대 K번 원소를 삭제한 수열에서 짝수로 이루어져 있는 연속한 부분 수열 중 가장 긴 길이를 출력.
+     *
+     *  [풀이]
+     *  투 포인터
      */
     public static void main(String[] args) throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -34,25 +37,23 @@ public class Main {
             S[i] = Integer.parseInt(st.nextToken());
         }
 
-        int left = 0;  // 윈도우의 왼쪽 포인터
-        int oddCount = 0;  // 현재 윈도우 내 홀수의 개수
-        int maxLength = 0;  // 짝수로 이루어진 부분 수열의 최대 길이
+        int left = 0;
+        int oddCnt = 0;
+        int maxLength = 0;
 
         for (int right = 0; right < N; right++) {
-            if (S[right] % 2 != 0) {  // 홀수인 경우
-                oddCount++;
+            if (S[right] % 2 != 0) {
+                oddCnt++;
             }
 
-            // 홀수의 개수가 K를 초과하면 윈도우의 왼쪽을 이동시킴
-            while (oddCount > K) {
+            while (oddCnt > K) {
                 if (S[left] % 2 != 0) {
-                    oddCount--;
+                    oddCnt--;
                 }
                 left++;
             }
 
-            // 현재 윈도우의 길이를 계산하고 최대 길이를 갱신
-            maxLength = Math.max(maxLength, right - left + 1 - oddCount);
+            maxLength = Math.max(maxLength, right - left + 1 - oddCnt);
         }
 
         System.out.println(maxLength);
