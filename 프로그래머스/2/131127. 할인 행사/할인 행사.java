@@ -17,15 +17,46 @@ public class Solution {
      *  회원등록시 정현이가 원하는 제품을 모두 할인 받을 수 있는
      *  회원등록 날짜의 총 일수를 return 하는 solution 함수를 완성하시오.
      *  가능한 날이 없으면 0을 return
+     *
+     *  [풀이]
+     *  시간 복잡도는 O(n), 공간 복잡도는 O(m) (n은 discount 배열의 길이, m은 want 배열의 길이).
+     *  매우 효율적
      */
     public static int solution(String[] want, int[] number, String[] discount) {
         int answer = 0;
-        int n = discount.length;
 
-        // 슬라이딩 윈도우를 사용하여 10일간의 할인 품목을 확인
-        for (int i = 0; i <= n - 10; i++) {
-            // 현재 10일간의 할인 품목과 원하는 품목 비교
-            if (checkMatch(want, number, discount, i)) {
+        // 원하는 제품의 품목과 개수 저장
+        Map<String, Integer> wantMap = new HashMap<>();
+        for (int i = 0; i < want.length; i++) {
+            wantMap.put(want[i], number[i]);
+        }
+
+        // 현재 확인하고 있는 10일의 할인 품목과 개수 저장
+        Map<String, Integer> currentMap = new HashMap<>();
+        for (int i = 0; i < 10; i++) {
+            currentMap.put(discount[i], currentMap.getOrDefault(discount[i], 0) + 1);
+        }
+
+        // currentMap에 저장되어 있는 초기 10일과 wantMap 비교
+        if (checkMap(wantMap, currentMap)) {
+            answer++;
+        }
+
+        // 슬라이딩 윈도우로 이후의 10일 확인
+        for (int i = 10; i < discount.length; i++) {
+            // 맨 앞 제품 제거
+            String oldProduct = discount[i - 10];
+            currentMap.put(oldProduct, currentMap.get(oldProduct) - 1);
+            if (currentMap.get(oldProduct) == 0) {
+                currentMap.remove(oldProduct);
+            }
+
+            // 새 제품 추가
+            String newProduct = discount[i];
+            currentMap.put(newProduct, currentMap.getOrDefault(newProduct, 0) + 1);
+
+            // 새 제품부터 다음 10일 비교
+            if (checkMap(wantMap, currentMap)) {
                 answer++;
             }
         }
@@ -33,21 +64,9 @@ public class Solution {
         return answer;
     }
 
-    private static boolean checkMatch(String[] want, int[] number, String[] discount, int start) {
-        int[] count = new int[want.length];
-
-        // 10일간의 할인 품목을 순회하며 필요한 수량을 충족하는지 확인
-        for (int i = start; i < start + 10; i++) {
-            for (int j = 0; j < want.length; j++) {
-                if (discount[i].equals(want[j])) {
-                    count[j]++;
-                }
-            }
-        }
-
-        // 원하는 수량과 일치하는지 확인
-        for (int j = 0; j < want.length; j++) {
-            if (count[j] < number[j]) {
+    private static boolean checkMap(Map<String, Integer> wantMap, Map<String, Integer> currentMap) {
+        for (String key : wantMap.keySet()) {
+            if (!currentMap.containsKey(key) || !currentMap.get(key).equals(wantMap.get(key))) {
                 return false;
             }
         }
@@ -61,13 +80,13 @@ public class Solution {
         String[] discount1 = {"chicken", "apple", "apple", "banana", "rice", "apple",
                 "pork", "banana", "pork", "rice", "pot", "banana", "apple", "banana"};
 
-        System.out.println(solution(want1, number1, discount1));
+        System.out.println(solution(want1, number1, discount1)); // 3
 
         String[] want2 = {"apple"};
         int[] number2 = {10};
         String[] discount2 = {"banana", "banana", "banana", "banana", "banana",
                 "banana", "banana", "banana", "banana", "banana"};
 
-        System.out.println(solution(want2, number2, discount2));
+        System.out.println(solution(want2, number2, discount2)); // 0
     }
 }
