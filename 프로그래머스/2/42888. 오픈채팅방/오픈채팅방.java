@@ -3,36 +3,33 @@ import java.util.*;
 public class Solution {
     public static String[] solution(String[] record) {
         HashMap<String, String> userMap = new HashMap<>();
-        // userId와 nickname 매핑해 저장
-
         List<String> resultList = new ArrayList<>();
 
-        // 첫 번째 반복: Enter와 Change 명령어를 처리하여 userMap 갱신
-        for (String r : record) {
-            String[] parts = r.split(" ");
-            String command = parts[0];
-            String userId = parts[1];
-
-            if (command.equals("Enter") || command.equals("Change")) {
-                String nickname = parts[2];
-                userMap.put(userId, nickname);
-            }
-        }
-
-        // 두 번째 반복: 출력할 최종 메시지 구성
+        // 하나의 반복문에서 모든 작업을 처리
         for (String r : record) {
             String[] parts = r.split(" ");
             String command = parts[0];
             String userId = parts[1];
 
             if (command.equals("Enter")) {
-                resultList.add(userMap.get(userId) + "님이 들어왔습니다.");
+                String nickname = parts[2];
+                userMap.put(userId, nickname); // 최신 닉네임으로 갱신
+                resultList.add(userId + "님이 들어왔습니다."); // 메시지 저장
             } else if (command.equals("Leave")) {
-                resultList.add(userMap.get(userId) + "님이 나갔습니다.");
+                resultList.add(userId + "님이 나갔습니다."); // 메시지 저장
+            } else if (command.equals("Change")) {
+                String nickname = parts[2];
+                userMap.put(userId, nickname); // 닉네임 갱신만
             }
         }
 
-        // 결과를 배열로 변환
+        // 저장된 메시지에서 최종적으로 출력할 때 닉네임을 매핑
+        for (int i = 0; i < resultList.size(); i++) {
+            String message = resultList.get(i);
+            String userId = message.split("님")[0];
+            resultList.set(i, message.replace(userId, userMap.get(userId)));
+        }
+
         return resultList.toArray(new String[resultList.size()]);
     }
 
@@ -43,5 +40,6 @@ public class Solution {
         for (String message : result) {
             System.out.println(message);
         }
+        // ["Prodo님이 들어왔습니다.", "Ryan님이 들어왔습니다.", "Prodo님이 나갔습니다.", "Prodo님이 들어왔습니다."]
     }
 }
